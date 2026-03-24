@@ -71,6 +71,7 @@ class WC_REST_General_Settings_V4_Controller_Test extends WC_REST_Unit_Test_Case
 		delete_option( 'woocommerce_currency' );
 		delete_option( 'woocommerce_price_num_decimals' );
 		delete_option( 'woocommerce_share_key_display' );
+		delete_option( 'woocommerce_default_customer_address' );
 		parent::tearDown();
 	}
 
@@ -356,5 +357,55 @@ class WC_REST_General_Settings_V4_Controller_Test extends WC_REST_Unit_Test_Case
 		$this->assertContains( 'woocommerce_price_num_decimals', $response_setting_ids );
 		$this->assertNotContains( 'general_options', $response_setting_ids ); // Should not be in response as updatable.
 		$this->assertNotContains( 'woocommerce_share_key_display', $response_setting_ids ); // Should not be in response as updatable.
+	}
+
+	/**
+	 * Test updating woocommerce_default_customer_address with a valid option.
+	 */
+	public function test_update_default_customer_address_valid() {
+		wp_set_current_user( $this->user_id );
+
+		foreach ( array( '', 'base', 'geolocation', 'geolocation_ajax' ) as $valid_option ) {
+			$request = new WP_REST_Request( 'PUT', '/wc/v4/settings/general' );
+			$request->set_header( 'Content-Type', 'application/json' );
+			$request->set_body(
+				wp_json_encode(
+					array(
+						'values' => array(
+							'woocommerce_default_customer_address' => $valid_option,
+						),
+					)
+				)
+			);
+			$response = $this->server->dispatch( $request );
+			$data     = $response->get_data();
+
+			$this->assertEquals( 200, $response->get_status(), "Expected 200 for valid option '$valid_option'" );
+			$this->assertEquals( $valid_option, get_option( 'woocommerce_default_customer_address' ), "Expected option to be saved as '$valid_option'" );
+			$this->assertEquals( $valid_option, $data['values']['woocommerce_default_customer_address'] );
+		}
+	}
+
+	/**
+	 * Test updating woocommerce_default_customer_address with an invalid option returns error.
+	 */
+	public function test_update_default_customer_address_invalid() {
+		wp_set_current_user( $this->user_id );
+		$request = new WP_REST_Request( 'PUT', '/wc/v4/settings/general' );
+		$request->set_header( 'Content-Type', 'application/json' );
+		$request->set_body(
+			wp_json_encode(
+				array(
+					'values' => array(
+						'woocommerce_default_customer_address' => 'invalid_option',
+					),
+				)
+			)
+		);
+		$response = $this->server->dispatch( $request );
+		$data     = $response->get_data();
+
+		$this->assertEquals( 400, $response->get_status() );
+		$this->assertEquals( 'rest_invalid_param', $data['code'] );
 	}
 }

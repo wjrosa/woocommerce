@@ -279,6 +279,17 @@ class Controller extends AbstractController {
 				}
 				break;
 
+			case 'woocommerce_default_customer_address':
+				$valid_options = array( '', 'base', 'geolocation', 'geolocation_ajax' );
+				if ( ! in_array( $value, $valid_options, true ) ) {
+					return new WP_Error(
+						'rest_invalid_param',
+						__( 'Invalid default customer address option.', 'woocommerce' ),
+						array( 'status' => 400 )
+					);
+				}
+				break;
+
 			case 'woocommerce_allowed_countries':
 				$valid_options = array( 'all', 'all_except', 'specific' );
 				if ( ! in_array( $value, $valid_options, true ) ) {
