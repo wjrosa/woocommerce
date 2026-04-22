@@ -8,6 +8,8 @@
  * @since   2.6.0
  */
 
+use Automattic\WooCommerce\Enums\WebhookStatus;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -108,7 +110,7 @@ class WC_REST_Webhooks_V2_Controller extends WC_REST_Webhooks_V1_Controller {
 				'status'            => array(
 					'description' => __( 'Webhook status.', 'woocommerce' ),
 					'type'        => 'string',
-					'default'     => 'active',
+					'default'     => WebhookStatus::ACTIVE,
 					'enum'        => array_keys( wc_get_webhook_statuses() ),
 					'context'     => array( 'view', 'edit' ),
 				),

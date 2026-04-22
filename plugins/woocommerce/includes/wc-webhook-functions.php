@@ -6,6 +6,8 @@
  * @version 3.3.0
  */
 
+use Automattic\WooCommerce\Enums\WebhookStatus;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -147,9 +149,9 @@ function wc_get_webhook_statuses() {
 	return apply_filters(
 		'woocommerce_webhook_statuses',
 		array(
-			'active'   => __( 'Active', 'woocommerce' ),
-			'paused'   => __( 'Paused', 'woocommerce' ),
-			'disabled' => __( 'Disabled', 'woocommerce' ),
+			WebhookStatus::ACTIVE   => __( 'Active', 'woocommerce' ),
+			WebhookStatus::PAUSED   => __( 'Paused', 'woocommerce' ),
+			WebhookStatus::DISABLED => __( 'Disabled', 'woocommerce' ),
 		)
 	);
 }

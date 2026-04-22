@@ -16,6 +16,7 @@ The enum classes make it easier to reference string values and avoid typos. They
 - [ProductStockStatus](./ProductStockStatus.php) - Enumerates the possible stock statuses of a product.
 - [ProductType](./ProductType.php) - Enumerates the possible types of a product.
 - [TaxBasedOn](./TaxBasedOn.php) - Enumerates the possible values of the `woocommerce_tax_based_on` option.
+- [WebhookStatus](./WebhookStatus.php) - Enumerates the possible webhook statuses (as returned by `wc_get_webhook_statuses()`).
 
 ## Contributing
 

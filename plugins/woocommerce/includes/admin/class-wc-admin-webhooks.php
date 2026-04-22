@@ -6,6 +6,8 @@
  * @version 3.3.0
  */
 
+use Automattic\WooCommerce\Enums\WebhookStatus;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -86,7 +88,7 @@ class WC_Admin_Webhooks {
 
 		// Status.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$webhook->set_status( ! empty( $_POST['webhook_status'] ) ? sanitize_text_field( wp_unslash( $_POST['webhook_status'] ) ) : 'disabled' );
+		$webhook->set_status( ! empty( $_POST['webhook_status'] ) ? sanitize_text_field( wp_unslash( $_POST['webhook_status'] ) ) : WebhookStatus::DISABLED );
 
 		// Delivery URL.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -144,7 +146,7 @@ class WC_Admin_Webhooks {
 			wp_safe_redirect( admin_url( 'admin.php?page=wc-settings&tab=advanced&section=webhooks&edit-webhook=' . $webhook->get_id() . '&error=' . rawurlencode( implode( '|', $errors ) ) ) );
 			exit();
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		} elseif ( isset( $_POST['webhook_status'] ) && 'active' === $_POST['webhook_status'] && $webhook->get_pending_delivery() ) {
+		} elseif ( isset( $_POST['webhook_status'] ) && WebhookStatus::ACTIVE === $_POST['webhook_status'] && $webhook->get_pending_delivery() ) {
 			// Ping the webhook at the first time that is activated.
 			$result = $webhook->deliver_ping();
 

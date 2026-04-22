@@ -6,6 +6,8 @@
  * @package  WooCommerce\Classes\Data_Store
  */
 
+use Automattic\WooCommerce\Enums\WebhookStatus;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -159,7 +161,7 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 		wp_cache_delete( $webhook->get_id(), 'webhooks' );
 		WC_Cache_Helper::invalidate_cache_group( 'webhooks' );
 
-		if ( 'active' === $webhook->get_status() && ( $trigger || $webhook->get_pending_delivery() ) ) {
+		if ( WebhookStatus::ACTIVE === $webhook->get_status() && ( $trigger || $webhook->get_pending_delivery() ) ) {
 			$webhook->deliver_ping();
 		}
 
@@ -251,9 +253,9 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 
 		// Map post statuses.
 		$statuses = array(
-			'publish' => 'active',
-			'draft'   => 'paused',
-			'pending' => 'disabled',
+			'publish' => WebhookStatus::ACTIVE,
+			'draft'   => WebhookStatus::PAUSED,
+			'pending' => WebhookStatus::DISABLED,
 		);
 
 		// Map orderby to support a few post keys.
@@ -384,7 +386,7 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 	 * @param string $status Status to count.
 	 * @return int
 	 */
-	protected function get_webhook_count( $status = 'active' ) {
+	protected function get_webhook_count( $status = WebhookStatus::ACTIVE ) {
 		global $wpdb;
 		$cache_key = WC_Cache_Helper::get_cache_prefix( 'webhooks' ) . $status . '_count';
 		$count     = wp_cache_get( $cache_key, 'webhooks' );

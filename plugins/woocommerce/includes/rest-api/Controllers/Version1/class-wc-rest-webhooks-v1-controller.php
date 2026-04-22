@@ -8,6 +8,8 @@
  * @since    3.0.0
  */
 
+use Automattic\WooCommerce\Enums\WebhookStatus;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -351,7 +353,7 @@ class WC_REST_Webhooks_V1_Controller extends WC_REST_Controller {
 		$webhook = new WC_Webhook();
 		$webhook->set_name( $post->post_title );
 		$webhook->set_user_id( $post->post_author );
-		$webhook->set_status( 'publish' === $post->post_status ? 'active' : 'disabled' );
+		$webhook->set_status( 'publish' === $post->post_status ? WebhookStatus::ACTIVE : WebhookStatus::DISABLED );
 		$webhook->set_topic( $request['topic'] );
 		$webhook->set_delivery_url( $request['delivery_url'] );
 		$webhook->set_secret( ! empty( $request['secret'] ) ? $request['secret'] : wp_generate_password( 50, true, true ) );
@@ -640,7 +642,7 @@ class WC_REST_Webhooks_V1_Controller extends WC_REST_Controller {
 				'status'        => array(
 					'description' => __( 'Webhook status.', 'woocommerce' ),
 					'type'        => 'string',
-					'default'     => 'active',
+					'default'     => WebhookStatus::ACTIVE,
 					'enum'        => array_keys( wc_get_webhook_statuses() ),
 					'context'     => array( 'view', 'edit' ),
 				),
@@ -768,7 +770,7 @@ class WC_REST_Webhooks_V1_Controller extends WC_REST_Controller {
 			'default'           => 'all',
 			'description'       => __( 'Limit result set to webhooks assigned a specific status.', 'woocommerce' ),
 			'type'              => 'string',
-			'enum'              => array( 'all', 'active', 'paused', 'disabled' ),
+			'enum'              => array( 'all', WebhookStatus::ACTIVE, WebhookStatus::PAUSED, WebhookStatus::DISABLED ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);

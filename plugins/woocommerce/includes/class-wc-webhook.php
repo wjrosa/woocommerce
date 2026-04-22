@@ -13,10 +13,11 @@
 
 use Automattic\Jetpack\Constants;
 use Automattic\WooCommerce\Enums\OrderStatus;
+use Automattic\WooCommerce\Enums\WebhookStatus;
+use Automattic\WooCommerce\Utilities\LoggingUtil;
 use Automattic\WooCommerce\Utilities\NumberUtil;
 use Automattic\WooCommerce\Utilities\OrderUtil;
 use Automattic\WooCommerce\Utilities\RestApiUtil;
-use Automattic\WooCommerce\Utilities\LoggingUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -43,7 +44,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	protected $data = array(
 		'date_created'     => null,
 		'date_modified'    => null,
-		'status'           => 'disabled',
+		'status'           => WebhookStatus::DISABLED,
 		'delivery_url'     => '',
 		'secret'           => '',
 		'name'             => '',
@@ -160,7 +161,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	 * @return bool  True if validation passes.
 	 */
 	private function is_active() {
-		return 'active' === $this->get_status();
+		return WebhookStatus::ACTIVE === $this->get_status();
 	}
 
 	/**
@@ -563,7 +564,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 		$failures = $this->get_failure_count();
 
 		if ( $failures > apply_filters( 'woocommerce_max_webhook_delivery_failures', 5 ) ) {
-			$this->set_status( 'disabled' );
+			$this->set_status( WebhookStatus::DISABLED );
 
 			do_action( 'woocommerce_webhook_disabled_due_delivery_failures', $this->get_id() );
 		} else {
@@ -839,7 +840,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	 */
 	public function set_status( $status ) {
 		if ( ! array_key_exists( $status, wc_get_webhook_statuses() ) ) {
-			$status = 'disabled';
+			$status = WebhookStatus::DISABLED;
 		}
 
 		$this->set_prop( 'status', $status );

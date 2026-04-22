@@ -24,6 +24,7 @@ use Automattic\WooCommerce\Database\Migrations\MigrationHelper;
 use Automattic\WooCommerce\Enums\DefaultCustomerAddress;
 use Automattic\WooCommerce\Enums\ProductStockStatus;
 use Automattic\WooCommerce\Enums\ProductType;
+use Automattic\WooCommerce\Enums\WebhookStatus;
 use Automattic\WooCommerce\Internal\Admin\Marketing\MarketingSpecs;
 use Automattic\WooCommerce\Internal\Admin\Notes\WooSubscriptionsNotes;
 use Automattic\WooCommerce\Internal\AssignDefaultCategory;
@@ -1586,9 +1587,9 @@ function wc_update_330_webhooks() {
 
 	// Map statuses from post_type to Webhooks CRUD.
 	$statuses = array(
-		'publish' => 'active',
-		'draft'   => 'paused',
-		'pending' => 'disabled',
+		'publish' => WebhookStatus::ACTIVE,
+		'draft'   => WebhookStatus::PAUSED,
+		'pending' => WebhookStatus::DISABLED,
 	);
 
 	$posts = get_posts(
@@ -1602,7 +1603,7 @@ function wc_update_330_webhooks() {
 	foreach ( $posts as $post ) {
 		$webhook = new WC_Webhook();
 		$webhook->set_name( $post->post_title );
-		$webhook->set_status( isset( $statuses[ $post->post_status ] ) ? $statuses[ $post->post_status ] : 'disabled' );
+		$webhook->set_status( isset( $statuses[ $post->post_status ] ) ? $statuses[ $post->post_status ] : WebhookStatus::DISABLED );
 		$webhook->set_delivery_url( get_post_meta( $post->ID, '_delivery_url', true ) );
 		$webhook->set_secret( get_post_meta( $post->ID, '_secret', true ) );
 		$webhook->set_topic( get_post_meta( $post->ID, '_topic', true ) );
