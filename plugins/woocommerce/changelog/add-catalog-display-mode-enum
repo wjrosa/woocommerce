@@ -1,0 +1,4 @@
+Significance: minor
+Type: add
+
+Add CatalogDisplayMode enum class for woocommerce_shop_page_display and woocommerce_category_archive_display option values and implement it across the codebase.

@@ -10,6 +10,7 @@
 
 use Automattic\Jetpack\Constants;
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
+use Automattic\WooCommerce\Enums\CatalogDisplayMode;
 use Automattic\WooCommerce\Enums\OrderStatus;
 use Automattic\WooCommerce\Enums\PaymentGatewayFeature;
 use Automattic\WooCommerce\Enums\ProductType;
@@ -2800,7 +2801,7 @@ if ( ! function_exists( 'woocommerce_products_will_display' ) ) {
 	function woocommerce_products_will_display() {
 		$display_type = woocommerce_get_loop_display_mode();
 
-		return 0 < wc_get_loop_prop( 'total', 0 ) && 'subcategories' !== $display_type;
+		return 0 < wc_get_loop_prop( 'total', 0 ) && CatalogDisplayMode::SUBCATEGORIES !== $display_type;
 	}
 }
 
@@ -2819,27 +2820,27 @@ if ( ! function_exists( 'woocommerce_get_loop_display_mode' ) ) {
 		}
 
 		$parent_id    = 0;
-		$display_type = '';
+		$display_type = CatalogDisplayMode::PRODUCTS;
 
 		if ( is_shop() ) {
-			$display_type = get_option( 'woocommerce_shop_page_display', '' );
+			$display_type = get_option( 'woocommerce_shop_page_display', CatalogDisplayMode::PRODUCTS );
 		} elseif ( is_product_category() ) {
 			$parent_id    = get_queried_object_id();
 			$display_type = get_term_meta( $parent_id, 'display_type', true );
-			$display_type = '' === $display_type ? get_option( 'woocommerce_category_archive_display', '' ) : $display_type;
+			$display_type = CatalogDisplayMode::PRODUCTS === $display_type ? get_option( 'woocommerce_category_archive_display', CatalogDisplayMode::PRODUCTS ) : $display_type;
 		}
 
-		if ( ( ! is_shop() || 'subcategories' !== $display_type ) && 1 < wc_get_loop_prop( 'current_page' ) ) {
+		if ( ( ! is_shop() || CatalogDisplayMode::SUBCATEGORIES !== $display_type ) && 1 < wc_get_loop_prop( 'current_page' ) ) {
 			return 'products';
 		}
 
 		// Ensure valid value.
-		if ( '' === $display_type || ! in_array( $display_type, array( 'products', 'subcategories', 'both' ), true ) ) {
+		if ( CatalogDisplayMode::PRODUCTS === $display_type || ! in_array( $display_type, array( 'products', CatalogDisplayMode::SUBCATEGORIES, CatalogDisplayMode::BOTH ), true ) ) {
 			$display_type = 'products';
 		}
 
 		// If we're showing categories, ensure we actually have something to show.
-		if ( in_array( $display_type, array( 'subcategories', 'both' ), true ) ) {
+		if ( in_array( $display_type, array( CatalogDisplayMode::SUBCATEGORIES, CatalogDisplayMode::BOTH ), true ) ) {
 			$subcategories = woocommerce_get_product_subcategories( $parent_id );
 
 			if ( empty( $subcategories ) ) {
@@ -2868,7 +2869,7 @@ if ( ! function_exists( 'woocommerce_maybe_show_product_subcategories' ) ) {
 		$display_type = woocommerce_get_loop_display_mode();
 
 		// If displaying categories, append to the loop.
-		if ( 'subcategories' === $display_type || 'both' === $display_type ) {
+		if ( CatalogDisplayMode::SUBCATEGORIES === $display_type || CatalogDisplayMode::BOTH === $display_type ) {
 			ob_start();
 			woocommerce_output_product_categories(
 				array(
@@ -2877,7 +2878,7 @@ if ( ! function_exists( 'woocommerce_maybe_show_product_subcategories' ) ) {
 			);
 			$loop_html .= ob_get_clean();
 
-			if ( 'subcategories' === $display_type ) {
+			if ( CatalogDisplayMode::SUBCATEGORIES === $display_type ) {
 				wc_set_loop_prop( 'total', 0 );
 
 				// This removes pagination and products from display for themes not using wc_get_loop_prop in their product loops.  @todo Remove in future major version.

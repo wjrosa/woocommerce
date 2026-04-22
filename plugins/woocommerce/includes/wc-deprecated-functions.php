@@ -11,6 +11,7 @@
  */
 
 use Automattic\Jetpack\Constants;
+use Automattic\WooCommerce\Enums\CatalogDisplayMode;
 use Automattic\WooCommerce\Internal\Admin\Logging\Settings;
 use Automattic\WooCommerce\Utilities\LoggingUtil;
 
@@ -1343,7 +1344,7 @@ if ( ! function_exists( 'woocommerce_product_subcategories' ) ) {
 			// Output nothing. woocommerce_maybe_show_product_subcategories will handle the output of cats.
 			$display_type = woocommerce_get_loop_display_mode();
 
-			if ( 'subcategories' === $display_type ) {
+			if ( CatalogDisplayMode::SUBCATEGORIES === $display_type ) {
 				// This removes pagination and products from display for themes not using wc_get_loop_prop in their product loops. @todo Remove in future major version.
 				global $wp_query;
 
@@ -1353,7 +1354,7 @@ if ( ! function_exists( 'woocommerce_product_subcategories' ) ) {
 				}
 			}
 
-			return 'subcategories' === $display_type || 'both' === $display_type;
+			return CatalogDisplayMode::SUBCATEGORIES === $display_type || CatalogDisplayMode::BOTH === $display_type;
 		}
 	}
 }

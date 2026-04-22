@@ -6,6 +6,7 @@ The enum classes make it easier to reference string values and avoid typos. They
 
 ## Available Enumerators
 
+- [CatalogDisplayMode](./CatalogDisplayMode.php) - Enumerates the possible values of the `woocommerce_shop_page_display` and `woocommerce_category_archive_display` options.
 - [CatalogVisibility](./CatalogVisibility.php) - Enumerates the possible catalog visibility options for a product.
 - [DefaultCustomerAddress](./DefaultCustomerAddress.php) - Enumerates the possible values of the `woocommerce_default_customer_address` option.
 - [OrderInternalStatus](./OrderInternalStatus.php) - Enumerates the possible internal statuses of an order (when stored in the database).

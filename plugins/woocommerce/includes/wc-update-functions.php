@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
 use Automattic\WooCommerce\Admin\Notes\Note;
 use Automattic\WooCommerce\Admin\Notes\Notes;
 use Automattic\WooCommerce\Database\Migrations\MigrationHelper;
+use Automattic\WooCommerce\Enums\CatalogDisplayMode;
 use Automattic\WooCommerce\Enums\DefaultCustomerAddress;
 use Automattic\WooCommerce\Enums\ProductStockStatus;
 use Automattic\WooCommerce\Enums\ProductType;
@@ -123,17 +124,17 @@ function wc_update_200_subcat_display() {
 	// Update subcat display settings.
 	if ( 'yes' === get_option( 'woocommerce_shop_show_subcategories' ) ) {
 		if ( 'yes' === get_option( 'woocommerce_hide_products_when_showing_subcategories' ) ) {
-			update_option( 'woocommerce_shop_page_display', 'subcategories' );
+			update_option( 'woocommerce_shop_page_display', CatalogDisplayMode::SUBCATEGORIES );
 		} else {
-			update_option( 'woocommerce_shop_page_display', 'both' );
+			update_option( 'woocommerce_shop_page_display', CatalogDisplayMode::BOTH );
 		}
 	}
 
 	if ( 'yes' === get_option( 'woocommerce_show_subcategories' ) ) {
 		if ( 'yes' === get_option( 'woocommerce_hide_products_when_showing_subcategories' ) ) {
-			update_option( 'woocommerce_category_archive_display', 'subcategories' );
+			update_option( 'woocommerce_category_archive_display', CatalogDisplayMode::SUBCATEGORIES );
 		} else {
-			update_option( 'woocommerce_category_archive_display', 'both' );
+			update_option( 'woocommerce_category_archive_display', CatalogDisplayMode::BOTH );
 		}
 	}
 }

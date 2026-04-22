@@ -6,6 +6,8 @@
  * @package WooCommerce
  */
 
+use Automattic\WooCommerce\Enums\CatalogDisplayMode;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -309,9 +311,9 @@ class WC_Shop_Customizer {
 	 * @return string
 	 */
 	public function sanitize_archive_display( $value ) {
-		$options = array( '', 'subcategories', 'both' );
+		$options = array( CatalogDisplayMode::PRODUCTS, CatalogDisplayMode::SUBCATEGORIES, CatalogDisplayMode::BOTH );
 
-		return in_array( $value, $options, true ) ? $value : '';
+		return in_array( $value, $options, true ) ? $value : CatalogDisplayMode::PRODUCTS;
 	}
 
 	/**
