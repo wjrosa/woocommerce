@@ -8,6 +8,7 @@
 
 use Automattic\Jetpack\Constants;
 use Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore;
+use Automattic\WooCommerce\Enums\FileDownloadMethod;
 use Automattic\WooCommerce\Enums\ProductType;
 use Automattic\WooCommerce\Internal\Admin\EmailImprovements\EmailImprovements;
 use Automattic\WooCommerce\Internal\TransientFiles\TransientFilesEngine;
@@ -2524,7 +2525,7 @@ $stock_notifications_table_schema;
 
 		// Install files and folders for uploading files and prevent hotlinking.
 		$upload_dir      = wp_get_upload_dir();
-		$download_method = get_option( 'woocommerce_file_download_method', 'force' );
+		$download_method = get_option( 'woocommerce_file_download_method', FileDownloadMethod::FORCE );
 
 		$files = array(
 			array(
@@ -2535,7 +2536,7 @@ $stock_notifications_table_schema;
 			array(
 				'base'    => $upload_dir['basedir'] . '/woocommerce_uploads',
 				'file'    => '.htaccess',
-				'content' => 'redirect' === $download_method ? 'Options -Indexes' : 'deny from all',
+				'content' => FileDownloadMethod::REDIRECT === $download_method ? 'Options -Indexes' : 'deny from all',
 			),
 		);
 

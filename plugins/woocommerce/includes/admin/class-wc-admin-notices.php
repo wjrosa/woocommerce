@@ -8,6 +8,7 @@
 
 use Automattic\Jetpack\Constants;
 use Automattic\WooCommerce\Enums\DefaultCustomerAddress;
+use Automattic\WooCommerce\Enums\FileDownloadMethod;
 use Automattic\WooCommerce\Internal\Utilities\Users;
 use Automattic\WooCommerce\Internal\Utilities\WebhookUtil;
 
@@ -625,7 +626,7 @@ class WC_Admin_Notices {
 	 * @return void
 	 */
 	public static function add_redirect_download_method_notice() {
-		if ( 'redirect' === get_option( 'woocommerce_file_download_method' ) ) {
+		if ( FileDownloadMethod::REDIRECT === get_option( 'woocommerce_file_download_method' ) ) {
 			self::add_notice( 'redirect_download_method' );
 		} else {
 			self::remove_notice( 'redirect_download_method' );

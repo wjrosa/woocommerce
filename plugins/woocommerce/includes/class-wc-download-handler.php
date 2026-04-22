@@ -8,6 +8,8 @@
  * @version 2.2.0
  */
 
+use Automattic\WooCommerce\Enums\FileDownloadMethod;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -245,7 +247,7 @@ class WC_Download_Handler {
 		 * @param int    $product_id Product ID.
 		 * @param string $file_path  URL to file.
 		 */
-		$file_download_method = apply_filters( 'woocommerce_file_download_method', get_option( 'woocommerce_file_download_method', 'force' ), $product_id, $file_path );
+		$file_download_method = apply_filters( 'woocommerce_file_download_method', get_option( 'woocommerce_file_download_method', FileDownloadMethod::FORCE ), $product_id, $file_path );
 
 		// Add action to prevent issues in IE.
 		add_action( 'nocache_headers', array( __CLASS__, 'ie_nocache_headers_fix' ) );

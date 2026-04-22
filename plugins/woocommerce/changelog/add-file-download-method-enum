@@ -1,0 +1,4 @@
+Significance: minor
+Type: add
+
+Add FileDownloadMethod enum class for woocommerce_file_download_method option values and implement it across the codebase.

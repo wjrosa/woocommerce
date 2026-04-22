@@ -11,6 +11,7 @@
 use Automattic\Jetpack\Constants;
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
 use Automattic\WooCommerce\Enums\DefaultCustomerAddress;
+use Automattic\WooCommerce\Enums\FileDownloadMethod;
 use Automattic\WooCommerce\Utilities\NumberUtil;
 use Automattic\WooCommerce\Internal\Logging\OrderLogsCleanupHelper;
 
@@ -1105,7 +1106,7 @@ add_filter( 'attachment_link', 'wc_fix_product_attachment_link', 10, 2 );
  * @return string
  */
 function wc_ms_protect_download_rewite_rules( $rewrite ) {
-	if ( ! is_multisite() || 'redirect' === get_option( 'woocommerce_file_download_method' ) ) {
+	if ( ! is_multisite() || FileDownloadMethod::REDIRECT === get_option( 'woocommerce_file_download_method' ) ) {
 		return $rewrite;
 	}
 
